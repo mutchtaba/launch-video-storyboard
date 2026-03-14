@@ -66,6 +66,13 @@ export default function SceneOne_TwitterNotification() {
             Black translucent over whatever is behind.
           </p>
         </div>
+        <div className="border border-dashed border-zinc-300 rounded-lg p-3">
+          <p className="text-zinc-500 text-[11px] font-mono leading-relaxed">
+            <span className="font-bold text-zinc-600">VOICEOVER:</span> No Xynth voice here. 
+            Just ambient sound — doomscrolling, faint background noise. The notification 
+            sound effect (X ping) is the only audio cue.
+          </p>
+        </div>
       </div>
     </div>
   );

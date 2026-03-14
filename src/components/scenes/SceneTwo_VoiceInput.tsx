@@ -110,6 +110,14 @@ export default function SceneTwo_VoiceInput() {
             white, older words fade progressively.
           </p>
         </div>
+        <div className="border border-dashed border-zinc-300 rounded-lg p-3">
+          <p className="text-zinc-500 text-[11px] font-mono leading-relaxed">
+            <span className="font-bold text-zinc-600">VOICEOVER:</span> Chill Guy speaking 
+            casually: "Iran just closed the Strait of Hormuz. Can you analyze my portfolio 
+            and tell me if I should enter any new positions?" Unhurried, talking to Xynth 
+            like a friend. Pan sizzling faintly in background.
+          </p>
+        </div>
       </div>
     </div>
   );
