@@ -13,10 +13,10 @@ export default function SceneOne_TwitterNotification() {
       <div className="space-y-1">
         <div className="flex items-center gap-3">
           <span className="text-[10px] font-mono tracking-widest uppercase text-zinc-400 bg-zinc-200 px-2.5 py-1 rounded-full">
-            Scene 1
+            Frame 1
           </span>
           <span className="text-[10px] font-mono tracking-widest uppercase text-zinc-400">
-            0:10 – 0:15
+            0:12 – 0:15
           </span>
         </div>
         <h2 className="text-lg font-semibold text-zinc-800 tracking-tight">
@@ -53,7 +53,7 @@ export default function SceneOne_TwitterNotification() {
 
         {/* Tweet text — short, punchy */}
         <p className="text-white text-[17px] leading-snug font-light">
-          BREAKING: U.S. invades Iran. Strait of Hormuz closed to all commercial shipping.
+          BREAKING: Iran has officially closed the Strait of Hormuz to all commercial shipping. US Navy Fifth Fleet repositioning. Oil futures +14% pre-market.
         </p>
       </div>
 

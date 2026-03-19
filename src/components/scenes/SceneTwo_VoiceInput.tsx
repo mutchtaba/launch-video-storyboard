@@ -7,7 +7,7 @@
  */
 
 export default function SceneTwo_VoiceInput() {
-  const transcriptionText = `Iran just closed the Strait of Hormuz. Can you analyze my portfolio and tell me if I should enter any new positions?`;
+  const transcriptionText = `Hey Xynth, Iran just closed the Strait of Hormuz. Search up the latest news, scan what people are saying, and tell me how I should reposition my portfolio.`;
 
   const words = transcriptionText.split(' ');
 
@@ -17,10 +17,10 @@ export default function SceneTwo_VoiceInput() {
       <div className="space-y-1">
         <div className="flex items-center gap-3">
           <span className="text-[10px] font-mono tracking-widest uppercase text-zinc-400 bg-zinc-200 px-2.5 py-1 rounded-full">
-            Scene 2
+            Frame 2
           </span>
           <span className="text-[10px] font-mono tracking-widest uppercase text-zinc-400">
-            0:15 – 0:25
+            0:15 – 0:20
           </span>
         </div>
         <h2 className="text-lg font-semibold text-zinc-800 tracking-tight">
@@ -112,10 +112,10 @@ export default function SceneTwo_VoiceInput() {
         </div>
         <div className="border border-dashed border-zinc-300 rounded-lg p-3">
           <p className="text-zinc-500 text-[11px] font-mono leading-relaxed">
-            <span className="font-bold text-zinc-600">VOICEOVER:</span> Chill Guy speaking 
-            casually: "Iran just closed the Strait of Hormuz. Can you analyze my portfolio 
-            and tell me if I should enter any new positions?" Unhurried, talking to Xynth 
-            like a friend. Pan sizzling faintly in background.
+            <span className="font-bold text-zinc-600">VOICEOVER:</span> Chill Guy (casual, 
+            half-asleep): "Hey Xynth, Iran just closed the Strait of Hormuz. Search up the 
+            latest news, scan what people are saying, and tell me how I should reposition 
+            my portfolio." Pan sizzling faintly. Talking like he's asking a roommate.
           </p>
         </div>
       </div>

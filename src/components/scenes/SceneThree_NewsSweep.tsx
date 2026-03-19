@@ -21,10 +21,10 @@ export default function SceneThree_NewsSweep() {
       <div className="space-y-1">
         <div className="flex items-center gap-3">
           <span className="text-[10px] font-mono tracking-widest uppercase text-zinc-400 bg-zinc-200 px-2.5 py-1 rounded-full">
-            Scene 3
+            Frame 3
           </span>
           <span className="text-[10px] font-mono tracking-widest uppercase text-zinc-400">
-            0:25 – 0:45
+            0:30 – 0:40
           </span>
         </div>
         <h2 className="text-lg font-semibold text-zinc-800 tracking-tight">
@@ -128,9 +128,9 @@ export default function SceneThree_NewsSweep() {
           </div>
           <div className="border border-dashed border-zinc-300 rounded-lg p-2.5 w-[480px]">
             <p className="text-zinc-500 text-[10px] font-mono leading-relaxed">
-              <span className="font-bold text-zinc-600">VOICEOVER:</span> Xynth (calm, confident): 
-              "This is a live crisis with massive capital flows underway. Let me scan the latest 
-              news across all sources and break down what it means for your portfolio."
+              <span className="font-bold text-zinc-600">VOICEOVER:</span> Xynth: 
+              "Got it. I'll start with a broad news sweep across live articles, X, and Reddit, 
+              then cross-reference with historical precedent from the 2019 tanker crisis. Give me a moment."
             </p>
           </div>
         </div>
@@ -320,9 +320,9 @@ export default function SceneThree_NewsSweep() {
           <div className="border border-dashed border-zinc-300 rounded-lg p-2.5 w-[520px]">
             <p className="text-zinc-500 text-[10px] font-mono leading-relaxed">
               <span className="font-bold text-zinc-600">VOICEOVER:</span> Xynth: "News sweep complete. 
-              Sentiment is running hot — 82% bullish across Reddit and X on energy and defense. 
-              Top tickers: OXY, XOM, CVX in energy. RTX, LMT, NOC in defense. A few warning about 
-              a diplomatic de-escalation play within 48 hours."
+              On Reddit, 80% bullish on energy and defense. Top tickers: OXY, XOM, CVX in energy. 
+              RTX, LMT, NOC in defense. On X, most flagging crude longs, some warning about 
+              de-escalation within 48 hours."
             </p>
           </div>
         </div>
