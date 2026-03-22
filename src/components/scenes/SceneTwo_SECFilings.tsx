@@ -6,15 +6,75 @@
  * Light canvas — no dark backgrounds. Each panel is a full replica of the scan concept.
  */
 
+import { useRef, useState, useCallback, useEffect, forwardRef, useImperativeHandle } from 'react';
+import gsap from 'gsap';
+
+interface DocumentScanPanelHandle {
+  playInner: () => Promise<void>;
+}
+
+const introText = `Alright pulling SEC filings now. I want to see who's been quietly building positions before this blew up. Insider buys, institutional accumulation, production capacity, new contracts`;
+
 export default function SceneTwo_SECFilings() {
-  const filingChainPath =
-    'M560 60 V96 H228 V362 H720 V560 H228 V756 H720 V828';
-  const filingPulsePaths = [
-    'M560 60 V96 H228 V144',
-    'M228 326 V362 H720 V390',
-    'M720 522 V560 H228 V588',
-    'M228 718 V756 H720 V784',
-  ];
+  const words = introText.split(' ');
+  const [visibleWords, setVisibleWords] = useState(words.length);
+  const [isPlaying, setIsPlaying] = useState(false);
+
+  const hubRef = useRef<HTMLDivElement>(null);
+  const spineRef = useRef<HTMLDivElement>(null);
+  const branch1Ref = useRef<HTMLDivElement>(null);
+  const branch2Ref = useRef<HTMLDivElement>(null);
+  const branch3Ref = useRef<HTMLDivElement>(null);
+  const branch4Ref = useRef<HTMLDivElement>(null);
+  const panel1Ref = useRef<HTMLDivElement>(null);
+  const panel2Ref = useRef<HTMLDivElement>(null);
+  const panel3Ref = useRef<HTMLDivElement>(null);
+  const panel4Ref = useRef<HTMLDivElement>(null);
+  const scan1Ref = useRef<DocumentScanPanelHandle>(null);
+  const scan2Ref = useRef<DocumentScanPanelHandle>(null);
+  const scan3Ref = useRef<DocumentScanPanelHandle>(null);
+  const scan4Ref = useRef<DocumentScanPanelHandle>(null);
+
+  const playAnimation = useCallback(async () => {
+    if (isPlaying) return;
+    setIsPlaying(true);
+    setVisibleWords(0);
+
+    const branches = [branch1Ref, branch2Ref, branch3Ref, branch4Ref];
+    const panels = [panel1Ref, panel2Ref, panel3Ref, panel4Ref];
+    const scans = [scan1Ref, scan2Ref, scan3Ref, scan4Ref];
+
+    // Reset everything to hidden
+    gsap.set(hubRef.current, { opacity: 0, scale: 0.5 });
+    gsap.set(spineRef.current, { height: 0 });
+    branches.forEach((ref) => gsap.set(ref.current, { scaleX: 0 }));
+    panels.forEach((ref) => gsap.set(ref.current, { opacity: 0, y: 24 }));
+
+    // Phase 1: Stream text word-by-word
+    for (let i = 1; i <= words.length; i++) {
+      await new Promise((r) => setTimeout(r, 60));
+      setVisibleWords(i);
+    }
+
+    // Phase 2: Hub appears with spring (starts immediately after text)
+    await gsap.to(hubRef.current, { opacity: 1, scale: 1, duration: 0.4, ease: 'back.out(1.7)' });
+
+    // Phase 3: Spine fills like water through canals — each checkpoint spawns a filing
+    const stages = [22, 44, 66, 88];
+    for (let i = 0; i < 4; i++) {
+      // Spine grows to next branch level
+      await gsap.to(spineRef.current, { height: `${stages[i]}%`, duration: 0.3, ease: 'power2.inOut' });
+      // Branch + panel appear together (no waiting between them)
+      gsap.to(branches[i].current, { scaleX: 1, duration: 0.2, ease: 'power2.out' });
+      await gsap.to(panels[i].current, { opacity: 1, y: 0, duration: 0.3, ease: 'power2.out' });
+      // Fire inner scan animation (runs in parallel with next spine segment)
+      scans[i].current?.playInner();
+    }
+    // Spine completes to full length
+    await gsap.to(spineRef.current, { height: '100%', duration: 0.2, ease: 'power2.out' });
+
+    setIsPlaying(false);
+  }, [isPlaying, words.length]);
 
   return (
     <div className="flex flex-col items-start gap-10">
@@ -27,78 +87,60 @@ export default function SceneTwo_SECFilings() {
           <span className="text-[10px] font-mono tracking-widest uppercase text-zinc-400">
             0:30 – 0:42
           </span>
+          <button
+            onClick={playAnimation}
+            className="rounded-full px-3 py-1 text-[10px] font-mono tracking-wide uppercase transition-colors hover:opacity-80 cursor-pointer"
+            style={{
+              background: isPlaying ? 'rgba(0,0,0,0.4)' : 'rgba(0,0,0,0.85)',
+              color: '#ffffff',
+              border: '1px solid rgba(0,0,0,0.1)',
+            }}
+          >
+            {isPlaying ? '● Playing...' : '▶ Play'}
+          </button>
         </div>
         <h2 className="text-lg font-semibold text-zinc-800 tracking-tight">
           SEC Filing Web — EDGAR Deep Scan
         </h2>
         <p className="text-xs text-zinc-400 leading-relaxed max-w-md">
-          A staggered mosaic of filing scans drops from EDGAR, zig-zagging downward
-          as each lens isolates a phrase and extracts a live signal.
+          Central spine descends from EDGAR. Filing scans alternate sides,
+          each extracting a live insight.
         </p>
       </div>
 
-      {/* ===== THE WEB — 2×2 grid with center hub ===== */}
-      <div className="relative w-[1120px] h-[1050px]">
-        <div className="absolute inset-0 pointer-events-none">
-          <div
-            className="absolute left-[398px] top-[0px] h-[150px] w-[320px] rounded-full"
-            style={{
-              background: 'radial-gradient(circle, rgba(99,102,241,0.16) 0%, rgba(99,102,241,0.05) 48%, transparent 78%)',
-              filter: 'blur(26px)',
-            }}
-          />
-          <div
-            className="absolute left-[58px] top-[176px] h-[180px] w-[180px] rounded-full"
-            style={{
-              background: 'radial-gradient(circle, rgba(99,102,241,0.10) 0%, transparent 72%)',
-              filter: 'blur(22px)',
-            }}
-          />
-          <div
-            className="absolute right-[84px] top-[366px] h-[180px] w-[180px] rounded-full"
-            style={{
-              background: 'radial-gradient(circle, rgba(245,158,11,0.10) 0%, transparent 72%)',
-              filter: 'blur(22px)',
-            }}
-          />
-          <div
-            className="absolute left-[72px] top-[562px] h-[180px] w-[180px] rounded-full"
-            style={{
-              background: 'radial-gradient(circle, rgba(16,185,129,0.10) 0%, transparent 72%)',
-              filter: 'blur(22px)',
-            }}
-          />
-          <div
-            className="absolute right-[66px] bottom-[54px] h-[180px] w-[180px] rounded-full"
-            style={{
-              background: 'radial-gradient(circle, rgba(239,68,68,0.10) 0%, transparent 72%)',
-              filter: 'blur(22px)',
-            }}
-          />
-        </div>
+      {/* Xynth AI streamed text */}
+      <div className="w-[620px]">
+        <p className="text-[17px] leading-relaxed font-light">
+          {words.map((word, i) => {
+            let color: string;
+            if (i < 27) color = '#1a1a2e';
+            else if (i < 33) color = 'rgba(26,26,46,0.55)';
+            else color = 'rgba(26,26,46,0.25)';
+            return (
+              <span
+                key={i}
+                style={{ color, opacity: i < visibleWords ? 1 : 0, transition: 'opacity 0.25s ease-out', display: 'inline' }}
+              >
+                {word}{' '}
+              </span>
+            );
+          })}
+        </p>
+      </div>
 
-        <svg className="absolute inset-0 w-full h-full" viewBox="0 0 1120 1050" style={{ zIndex: 0 }}>
-          <path
-            d={filingChainPath}
-            stroke="rgba(113,113,122,0.6)"
-            strokeWidth="1.6"
-            fill="none"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-          />
-
-          {filingPulsePaths.map((path, i) => (
-            <circle key={i} r="3.2" fill="#a1a1aa" opacity="0.78">
-              <animateMotion dur={`${2.3 + i * 0.35}s`} repeatCount="indefinite" path={path} />
-            </circle>
-          ))}
-        </svg>
-
+      {/* ===== VERTICAL SPINE LAYOUT ===== */}
+      <div className="relative" style={{ width: 1000 }}>
+        {/* Central spine line */}
         <div
-          className="absolute left-1/2 top-[12px] -translate-x-1/2"
-          style={{ zIndex: 6 }}
-        >
+          ref={spineRef}
+          className="absolute top-0 pointer-events-none"
+          style={{ left: '50%', width: 2, height: '100%', background: 'rgba(113,113,122,0.25)', transform: 'translateX(-50%)' }}
+        />
+
+        {/* SEC EDGAR hub — centered at top */}
+        <div className="flex justify-center mb-6 relative" style={{ zIndex: 6 }}>
           <div
+            ref={hubRef}
             className="rounded-full px-5 py-2.5"
             style={{
               background: 'rgba(40,40,46,0.82)',
@@ -124,108 +166,149 @@ export default function SceneTwo_SECFilings() {
           </div>
         </div>
 
-        <div className="absolute left-[40px] top-[126px]" style={{ transform: 'scale(0.8)', transformOrigin: 'top left', zIndex: 4 }}>
-          <DocumentScanPanel
-            filingType="10-K"
-            filingColor="#6366f1"
-            company="Occidental Petroleum (OXY)"
-            documentText={[
-              'PART I — BUSINESS',
-              'Item 1. The Company operates through three segments:',
-              'Oil and Gas, Chemical, and Midstream and Marketing.',
-              'Total proved reserves increased to 3.8 billion BOE.',
-              'Permian Basin production averaged 582,000 BOE/d,',
-              'representing a 12% year-over-year increase driven',
-              'by enhanced recovery techniques and new well completions.',
-              'Item 1A. RISK FACTORS',
-              'Geopolitical disruptions to crude oil supply chains...',
-              'Regional bottlenecks could alter export realization.',
-            ]}
-            highlightLine={4}
-            highlightColor="rgba(99,102,241,0.16)"
-            insightLabel="Production Signal"
-            insightValue="Permian +12% YoY"
-            insightNote="10-K operating disclosure / upstream growth acceleration"
-            insightChip="3.8B BOE reserves"
-          />
-        </div>
+        {/* Filing rows — alternating sides along the spine */}
+        <div className="flex flex-col -space-y-44">
 
-        <div className="absolute left-[608px] top-[322px]" style={{ transform: 'scale(0.8)', transformOrigin: 'top left', zIndex: 3 }}>
-          <DocumentScanPanel
-            filingType="Form 4"
-            filingColor="#f59e0b"
-            company="Raytheon Technologies (RTX)"
-            documentText={[
-              'STATEMENT OF CHANGES IN BENEFICIAL OWNERSHIP',
-              'Name: Gregory J. Hayes, Chairman & CEO',
-              'Date of Transaction: 2024-03-14',
-              'Transaction Code: P (Purchase)',
-              'Shares Acquired: 45,000 at $98.12',
-              'Total Holdings After Transaction: 892,340',
-              'Nature of Ownership: Direct',
-              'Footnote: Open market purchase pursuant to',
-              '10b5-1 trading plan adopted 2024-01-08.',
-              'No concurrent offsetting disposition was reported.',
-            ]}
-            highlightLine={4}
-            highlightColor="rgba(245,158,11,0.16)"
-            insightLabel="Insider Signal"
-            insightValue="Buy volume +340%"
-            insightNote="Form 4 cluster / executive open-market accumulation"
-            insightChip="45K shares acquired"
-          />
-        </div>
+          {/* Row 1: 10-K — RIGHT side of spine, insight on RIGHT (outer) */}
+          <div className="relative flex items-start">
+            <div className="w-1/2" />
+            {/* Horizontal branch connector */}
+            <div ref={branch1Ref} className="absolute top-[120px]" style={{ left: '50%', width: 32, height: 2, background: 'rgba(113,113,122,0.25)', transformOrigin: 'left center' }} />
+            <div ref={panel1Ref} className="w-1/2 pl-10" style={{ transform: 'scale(0.78)', transformOrigin: 'top left' }}>
+              <DocumentScanPanel
+                ref={scan1Ref}
+                insightSide="right"
+                filingType="10-K"
+                filingColor="#6366f1"
+                company="Occidental Petroleum (OXY)"
+                documentText={[
+                  'PART I — BUSINESS',
+                  'Item 1. The Company operates through three segments:',
+                  'Oil and Gas, Chemical, and Midstream and Marketing.',
+                  'Total proved reserves increased to 3.8 billion BOE.',
+                  'Permian Basin production averaged 582,000 BOE/d,',
+                  'representing a 12% year-over-year increase driven',
+                  'by enhanced recovery techniques and new well completions.',
+                  'Item 1A. RISK FACTORS',
+                  'Geopolitical disruptions to crude oil supply chains...',
+                  'Regional bottlenecks could alter export realization.',
+                ]}
+                highlightLine={4}
+                highlightColor="rgba(99,102,241,0.16)"
+                insightLabel="Production Signal"
+                insightValue="Permian +12% YoY"
+                insightNote="10-K operating disclosure / upstream growth acceleration"
+                insightChip="3.8B BOE reserves"
+              />
+            </div>
+          </div>
 
-        <div className="absolute left-[44px] top-[518px]" style={{ transform: 'scale(0.8)', transformOrigin: 'top left', zIndex: 5 }}>
-          <DocumentScanPanel
-            filingType="13-F"
-            filingColor="#10b981"
-            company="Berkshire Hathaway Inc."
-            documentText={[
-              'FORM 13F INFORMATION TABLE',
-              'Report for Quarter Ended: 2024-03-31',
-              'Manager: Berkshire Hathaway Inc.',
-              'Occidental Petroleum Corp (OXY)',
-              'Shares: 248,023,456 — Value: $14,881,407 (×1000)',
-              'Change: +12,000,000 shares from prior quarter',
-              'Investment Discretion: SOLE',
-              'Voting Authority: 248,023,456 SOLE',
-              'Filing Accession No: 0001067983-24-000089',
-              'No put offset reported in the table section.',
-            ]}
-            highlightLine={5}
-            highlightColor="rgba(16,185,129,0.16)"
-            insightLabel="Institutional Flow"
-            insightValue="Berkshire +12M"
-            insightNote="13-F quarter-over-quarter increase / position still expanding"
-            insightChip="$14.9B total stake"
-          />
-        </div>
+          {/* Row 2: Form 4 — LEFT side of spine, insight on LEFT (outer) */}
+          <div className="relative flex items-start">
+            <div className="w-1/2 flex justify-end">
+              <div ref={panel2Ref} className="pr-10" style={{ transform: 'scale(0.78)', transformOrigin: 'top right' }}>
+              <DocumentScanPanel
+                ref={scan2Ref}
+                insightSide="left"
+                filingType="Form 4"
+                filingColor="#f59e0b"
+                company="ConocoPhillips (COP)"
+                documentText={[
+                  'STATEMENT OF CHANGES IN BENEFICIAL OWNERSHIP',
+                  'Name: Ryan M. Lance, Chairman & CEO',
+                  'Date of Transaction: 2024-03-11',
+                  'Transaction Code: P (Purchase)',
+                  'Shares Acquired: 52,000 at $118.40',
+                  'Total Holdings After Transaction: 1,245,680',
+                  'Nature of Ownership: Direct',
+                  'Footnote: Open market purchase pursuant to',
+                  '10b5-1 trading plan adopted 2024-01-15.',
+                  'No concurrent offsetting disposition was reported.',
+                ]}
+                highlightLine={4}
+                highlightColor="rgba(245,158,11,0.16)"
+                insightLabel="Insider Signal"
+                insightValue="CEO buying +52K"
+                insightNote="Form 4 cluster / executive open-market accumulation"
+                insightChip="$6.2M purchase"
+              />
+              </div>
+            </div>
+            {/* Horizontal branch connector */}
+            <div ref={branch2Ref} className="absolute top-[120px]" style={{ right: '50%', width: 32, height: 2, background: 'rgba(113,113,122,0.25)', transformOrigin: 'right center' }} />
+            <div className="w-1/2" />
+          </div>
 
-        <div className="absolute left-[614px] top-[714px]" style={{ transform: 'scale(0.8)', transformOrigin: 'top left', zIndex: 4 }}>
-          <DocumentScanPanel
-            filingType="8-K"
-            filingColor="#ef4444"
-            company="Lockheed Martin Corp (LMT)"
-            documentText={[
-              'CURRENT REPORT — FORM 8-K',
-              'Item 1.01 Entry into Material Contract',
-              'On March 12, 2024, Lockheed Martin Corporation',
-              'entered into a definitive agreement with the',
-              'U.S. Department of Defense valued at $4.2 billion',
-              'for next-generation integrated air defense systems.',
-              'Expected delivery: FY2025-FY2028.',
-              'Item 9.01 Financial Statements and Exhibits',
-              'Exhibit 99.1 — Press Release dated March 12, 2024',
-              'Program award classified as mission critical.',
-            ]}
-            highlightLine={4}
-            highlightColor="rgba(239,68,68,0.16)"
-            insightLabel="Event Alert"
-            insightValue="$4.2B DoD award"
-            insightNote="8-K material contract / multi-year defense revenue visibility"
-            insightChip="Delivery FY25–FY28"
-          />
+          {/* Row 3: 13-F — RIGHT side of spine, insight on RIGHT (outer) */}
+          <div className="relative flex items-start">
+            <div className="w-1/2" />
+            {/* Horizontal branch connector */}
+            <div ref={branch3Ref} className="absolute top-[120px]" style={{ left: '50%', width: 32, height: 2, background: 'rgba(113,113,122,0.25)', transformOrigin: 'left center' }} />
+            <div ref={panel3Ref} className="w-1/2 pl-10" style={{ transform: 'scale(0.78)', transformOrigin: 'top left' }}>
+              <DocumentScanPanel
+                ref={scan3Ref}
+                insightSide="right"
+                filingType="13-F"
+                filingColor="#10b981"
+                company="Berkshire Hathaway Inc."
+                documentText={[
+                  'FORM 13F INFORMATION TABLE',
+                  'Report for Quarter Ended: 2024-03-31',
+                  'Manager: Berkshire Hathaway Inc.',
+                  'Occidental Petroleum Corp (OXY)',
+                  'Shares: 248,023,456 — Value: $14,881,407 (×1000)',
+                  'Change: +12,000,000 shares from prior quarter',
+                  'Investment Discretion: SOLE',
+                  'Voting Authority: 248,023,456 SOLE',
+                  'Filing Accession No: 0001067983-24-000089',
+                  'No put offset reported in the table section.',
+                ]}
+                highlightLine={5}
+                highlightColor="rgba(16,185,129,0.16)"
+                insightLabel="Institutional Flow"
+                insightValue="Berkshire +12M"
+                insightNote="13-F quarter-over-quarter increase / position still expanding"
+                insightChip="$14.9B total stake"
+              />
+            </div>
+          </div>
+
+          {/* Row 4: 8-K — LEFT side of spine, insight on LEFT (outer) */}
+          <div className="relative flex items-start">
+            <div className="w-1/2 flex justify-end">
+              <div ref={panel4Ref} className="pr-10" style={{ transform: 'scale(0.78)', transformOrigin: 'top right' }}>
+              <DocumentScanPanel
+                ref={scan4Ref}
+                insightSide="left"
+                filingType="8-K"
+                filingColor="#ef4444"
+                company="Cheniere Energy Inc (LNG)"
+                documentText={[
+                  'CURRENT REPORT — FORM 8-K',
+                  'Item 1.01 Entry into Material Contract',
+                  'On March 10, 2024, Cheniere Energy Inc.',
+                  'entered into a 20-year LNG supply agreement',
+                  'with European Energy AG valued at $8.6 billion',
+                  'for 2.0 MTPA from Sabine Pass Liquefaction.',
+                  'First deliveries expected Q1 2026.',
+                  'Item 9.01 Financial Statements and Exhibits',
+                  'Exhibit 10.1 — LNG Sale and Purchase Agreement',
+                  'Pricing indexed to TTF + Henry Hub blend.',
+                ]}
+                highlightLine={4}
+                highlightColor="rgba(239,68,68,0.16)"
+                insightLabel="Event Alert"
+                insightValue="$8.6B LNG deal"
+                insightNote="8-K material contract / 20-year European energy supply lock-in"
+                insightChip="2.0 MTPA capacity"
+              />
+              </div>
+            </div>
+            {/* Horizontal branch connector */}
+            <div ref={branch4Ref} className="absolute top-[120px]" style={{ right: '50%', width: 32, height: 2, background: 'rgba(113,113,122,0.25)', transformOrigin: 'right center' }} />
+            <div className="w-1/2" />
+          </div>
+
         </div>
       </div>
 
@@ -233,15 +316,18 @@ export default function SceneTwo_SECFilings() {
       <div className="space-y-2 mt-4" style={{ width: 700 }}>
         <div className="border border-dashed border-zinc-300 rounded-lg p-2.5">
           <p className="text-zinc-500 text-[10px] font-mono leading-relaxed">
-            <span className="font-bold text-zinc-600">VFX:</span> EDGAR is the source node, then a single gray elbow-chain routes through the four filing scans in sequence.
-            A pulse runs segment-to-segment through that chain, each lens locks onto a live filing phrase, enlarges it,
-            then the nearby insight card is pulled out from that exact scan point.
+            <span className="font-bold text-zinc-600">VFX:</span> Central spine descends from EDGAR hub.
+            Each filing panel drops in alternating sides — right, left, right, left.
+            Pulse travels down the spine. Each lens locks onto a highlighted phrase, then the
+            insight card slides out on the inner side (between panel and spine).
           </p>
         </div>
         <div className="border border-dashed border-zinc-300 rounded-lg p-2.5">
           <p className="text-zinc-500 text-[10px] font-mono leading-relaxed">
             <span className="font-bold text-zinc-600">VOICEOVER:</span> Xynth:
-            "Scanning SEC filings — checking 13F holdings and insider transactions."
+            "Scanning SEC filings — 10-K production data, Form 4 insider transactions,
+            13-F institutional holdings, and 8-K material events. Cross-referencing to
+            see who's been positioning ahead of this."
           </p>
         </div>
       </div>
@@ -256,18 +342,7 @@ export default function SceneTwo_SECFilings() {
    insight extraction cards with dashed connectors.
    ═══════════════════════════════════════════════════════════ */
 
-function DocumentScanPanel({
-  filingType,
-  filingColor,
-  company,
-  documentText,
-  highlightLine,
-  highlightColor,
-  insightLabel,
-  insightValue,
-  insightNote,
-  insightChip,
-}: {
+const DocumentScanPanel = forwardRef<DocumentScanPanelHandle, {
   filingType: string;
   filingColor: string;
   company: string;
@@ -278,30 +353,116 @@ function DocumentScanPanel({
   insightValue: string;
   insightNote: string;
   insightChip: string;
-}) {
+  insightSide?: 'left' | 'right';
+}>(function DocumentScanPanel({
+  filingType,
+  filingColor,
+  company,
+  documentText,
+  highlightLine,
+  highlightColor,
+  insightLabel,
+  insightValue,
+  insightNote,
+  insightChip,
+  insightSide = 'right',
+}, ref) {
   const lensSize = 148;
   const lensLeft = 114;
   const lensTop = 42;
   const panelWidth = 372;
-  const cardLeft = 390;
+  const panelShift = insightSide === 'left' ? 198 : 0;
+  const cardLeft = insightSide === 'left' ? 10 : 390;
   const cardTop = 92;
-  const anchorX = lensLeft + lensSize - 10;
+  const lensAbsX = panelShift + lensLeft;
+  const anchorX = insightSide === 'left' ? lensAbsX + 10 : lensAbsX + lensSize - 10;
   const anchorY = lensTop + lensSize / 2;
-  const connectorMidX = anchorX + 28;
+  const connectorMidX = insightSide === 'left' ? anchorX - 28 : anchorX + 28;
   const connectorTurnY = cardTop + 32;
-  const connectorEntryX = cardLeft - 18;
+  const connectorEntryX = insightSide === 'left' ? cardLeft + 180 + 18 : cardLeft - 18;
   const focusLines = documentText.slice(
     Math.max(0, highlightLine - 1),
     Math.min(documentText.length, highlightLine + 2),
   );
-  const connectorPath = `M${anchorX} ${anchorY} L${connectorMidX} ${anchorY} L${connectorMidX} ${connectorTurnY} L${connectorEntryX} ${connectorTurnY} L${cardLeft} ${connectorTurnY}`;
+  const connectorEndX = insightSide === 'left' ? cardLeft + 180 : cardLeft;
+  const connectorPath = `M${anchorX} ${anchorY} L${connectorMidX} ${anchorY} L${connectorMidX} ${connectorTurnY} L${connectorEntryX} ${connectorTurnY} L${connectorEndX} ${connectorTurnY}`;
+
+  const scanLineRef = useRef<HTMLDivElement>(null);
+  const textBlockRef = useRef<HTMLDivElement>(null);
+  const highlightBandRef = useRef<HTMLDivElement>(null);
+  const highlightUnderlineRef = useRef<HTMLDivElement>(null);
+  const lensRef = useRef<HTMLDivElement>(null);
+  const insightCardRef = useRef<HTMLDivElement>(null);
+  const connectorPathRef = useRef<SVGPathElement>(null);
+  const pulseCircleRef = useRef<SVGCircleElement>(null);
+
+  // Hide inner elements on mount via GSAP (not JSX style) so React re-renders don't overwrite
+  useEffect(() => {
+    gsap.set(highlightBandRef.current, { opacity: 0 });
+    gsap.set(highlightUnderlineRef.current, { opacity: 0 });
+    gsap.set(scanLineRef.current, { opacity: 0 });
+    gsap.set(insightCardRef.current, { opacity: 0 });
+    gsap.set(connectorPathRef.current, { strokeDashoffset: 250 });
+    gsap.set(pulseCircleRef.current, { opacity: 0 });
+  }, []);
+
+  useImperativeHandle(ref, () => ({
+    playInner: async () => {
+      const highlightBaseY = 16 + highlightLine * 16;
+      const magnifierCenterY = lensTop + lensSize / 2;
+
+      // Text starts offset down, scrolls up past magnifier
+      const startY = 70;
+      const endY = -10;
+      const scrollDistance = startY - endY;
+      const scrollDuration = 2.2;
+
+      // When does the highlight line pass through the magnifier center?
+      const highlightVisualStart = highlightBaseY + startY;
+      const distanceToLock = highlightVisualStart - magnifierCenterY;
+      const lockFraction = Math.max(0, Math.min(1, distanceToLock / scrollDistance));
+      const lockTime = lockFraction * scrollDuration;
+
+      // Reset inner elements
+      gsap.set(textBlockRef.current, { y: startY });
+      gsap.set(highlightBandRef.current, { opacity: 0, y: startY });
+      gsap.set(highlightUnderlineRef.current, { opacity: 0, y: startY });
+      gsap.set(scanLineRef.current, { opacity: 0 });
+      gsap.set(lensRef.current, { opacity: 1, scale: 1 }); // magnifier always visible
+      gsap.set(insightCardRef.current, { opacity: 0, x: insightSide === 'left' ? -30 : 30, scale: 0.85 });
+      gsap.set(connectorPathRef.current, { strokeDashoffset: 250 });
+      gsap.set(pulseCircleRef.current, { opacity: 0 });
+
+      const tl = gsap.timeline();
+
+      tl
+        // Text scrolls up through the panel (magnifier stays in place)
+        .to(textBlockRef.current, { y: endY, duration: scrollDuration, ease: 'power1.inOut' })
+        .to(highlightBandRef.current, { y: endY, duration: scrollDuration, ease: 'power1.inOut' }, 0)
+        .to(highlightUnderlineRef.current, { y: endY, duration: scrollDuration, ease: 'power1.inOut' }, 0)
+        // Highlight flashes when text passes the magnifier
+        .to(highlightBandRef.current, { opacity: 1, duration: 0.25 }, lockTime)
+        .to(highlightUnderlineRef.current, { opacity: 1, duration: 0.25 }, lockTime + 0.1)
+        // Breathing room — then connector draws
+        .to(connectorPathRef.current, { strokeDashoffset: 0, duration: 0.5, ease: 'power2.out' }, lockTime + 0.9)
+        // Pulse dot starts
+        .to(pulseCircleRef.current, { opacity: 0.82, duration: 0.15 }, lockTime + 1.3)
+        // Insight card slides in
+        .to(insightCardRef.current,
+          { opacity: 1, x: 0, scale: 1, duration: 0.6, ease: 'back.out(1.3)' },
+          lockTime + 1.1
+        );
+
+      await tl;
+    }
+  }));
 
   return (
     <div className="relative w-[570px] h-[310px]">
       <div
         className="absolute rounded-[30px]"
         style={{
-          left: 16,
+          left: 16 + panelShift,
           top: 22,
           width: panelWidth,
           height: 250,
@@ -313,13 +474,13 @@ function DocumentScanPanel({
       />
 
       <svg className="absolute inset-0 w-full h-full" viewBox="0 0 570 310" style={{ zIndex: 0 }}>
-        <path d={connectorPath} stroke="rgba(113,113,122,0.66)" strokeWidth="1.8" fill="none" strokeLinecap="round" strokeLinejoin="round" />
-        <circle r="3" fill="#a1a1aa" opacity="0.82">
+        <path ref={connectorPathRef} d={connectorPath} stroke="rgba(113,113,122,0.66)" strokeWidth="1.8" fill="none" strokeLinecap="round" strokeLinejoin="round" strokeDasharray="250" strokeDashoffset="250" />
+        <circle ref={pulseCircleRef} r="3" fill="#a1a1aa" opacity="0">
           <animateMotion dur="2.2s" repeatCount="indefinite" path={connectorPath} />
         </circle>
       </svg>
 
-      <div className="absolute left-0 top-0 w-[372px]" style={{ zIndex: 2 }}>
+      <div className="absolute top-0 w-[372px]" style={{ left: panelShift, zIndex: 2 }}>
         <div
           className="relative mt-[18px] rounded-[28px] border overflow-hidden"
           style={{
@@ -353,8 +514,10 @@ function DocumentScanPanel({
 
           <div
             className="relative h-[196px] px-4 py-3"
+            style={{ overflow: 'hidden' }}
           >
             <div
+              ref={highlightBandRef}
               className="absolute left-4 right-4 h-7 rounded-md pointer-events-none"
               style={{
                 top: `${16 + highlightLine * 16}px`,
@@ -364,6 +527,7 @@ function DocumentScanPanel({
             />
 
             <div
+              ref={highlightUnderlineRef}
               className="absolute left-4 right-4 h-px pointer-events-none"
               style={{
                 top: `${25 + highlightLine * 16}px`,
@@ -373,7 +537,19 @@ function DocumentScanPanel({
               }}
             />
 
-            <div className="relative z-[1] space-y-0.5">
+            {/* Scan line — sweeps through text during animation */}
+            <div
+              ref={scanLineRef}
+              className="absolute left-2 right-2 h-[2px] pointer-events-none"
+              style={{
+                top: 12,
+                background: `linear-gradient(90deg, transparent 0%, ${filingColor}66 15%, ${filingColor} 50%, ${filingColor}66 85%, transparent 100%)`,
+                boxShadow: `0 0 8px ${filingColor}44, 0 0 3px ${filingColor}`,
+                zIndex: 6,
+              }}
+            />
+
+            <div ref={textBlockRef} className="relative z-[1] space-y-0.5">
               {documentText.map((line, i) => {
                 const isHighlighted = i === highlightLine;
                 const isHeader = i === 0;
@@ -402,6 +578,7 @@ function DocumentScanPanel({
             </div>
 
             <div
+              ref={lensRef}
               className="absolute rounded-full pointer-events-none"
               style={{
                 left: lensLeft,
@@ -451,7 +628,7 @@ function DocumentScanPanel({
         </div>
       </div>
 
-      <div className="absolute w-[180px]" style={{ left: cardLeft, top: cardTop, zIndex: 3 }}>
+      <div ref={insightCardRef} className="absolute w-[180px]" style={{ left: cardLeft, top: cardTop, zIndex: 3 }}>
         <div
           className="absolute -inset-2 rounded-[26px]"
           style={{
@@ -500,4 +677,4 @@ function DocumentScanPanel({
       </div>
     </div>
   );
-}
+});

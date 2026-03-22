@@ -6,10 +6,38 @@
  * Colors match Xynth frontend (dark blues/greys).
  */
 
+import { useState, useCallback } from 'react';
+import { motion, useAnimationControls } from 'framer-motion';
+
 export default function SceneTwo_VoiceInput() {
-  const transcriptionText = `Hey Xynth, Iran just closed the Strait of Hormuz. Search up the latest news, scan what people are saying, and tell me how I should reposition my portfolio.`;
+  const transcriptionText = `Hey Xynth, Iran just closed the Strait of Hormuz. Tell me how I should reposition my portfolio.`;
 
   const words = transcriptionText.split(' ');
+  const [visibleCount, setVisibleCount] = useState(words.length);
+  const [isStreaming, setIsStreaming] = useState(false);
+  const orbControls = useAnimationControls();
+
+  const playAnimation = useCallback(async () => {
+    if (isStreaming) return;
+    setIsStreaming(true);
+    setVisibleCount(0);
+
+    // start orb pulsing harder
+    orbControls.start({
+      scale: [1, 1.18, 1, 1.12, 1],
+      transition: { duration: 1.6, repeat: Infinity, ease: 'easeInOut' },
+    });
+
+    // reveal words one by one
+    for (let i = 1; i <= words.length; i++) {
+      await new Promise((r) => setTimeout(r, 120));
+      setVisibleCount(i);
+    }
+
+    // settle orb
+    await orbControls.start({ scale: 1, transition: { duration: 0.5 } });
+    setIsStreaming(false);
+  }, [isStreaming, words.length, orbControls]);
 
   return (
     <div className="flex flex-col items-start gap-6">
@@ -22,6 +50,17 @@ export default function SceneTwo_VoiceInput() {
           <span className="text-[10px] font-mono tracking-widest uppercase text-zinc-400">
             0:15 – 0:20
           </span>
+          <button
+            onClick={playAnimation}
+            className="rounded-full px-3 py-1 text-[10px] font-mono tracking-wide uppercase transition-colors hover:opacity-80 cursor-pointer"
+            style={{
+              background: isStreaming ? 'rgba(0,0,0,0.4)' : 'rgba(0,0,0,0.85)',
+              color: '#ffffff',
+              border: '1px solid rgba(0,0,0,0.1)',
+            }}
+          >
+            {isStreaming ? '● Streaming...' : '▶ Play'}
+          </button>
         </div>
         <h2 className="text-lg font-semibold text-zinc-800 tracking-tight">
           Voice Input — Talking to Xynth
@@ -37,6 +76,7 @@ export default function SceneTwo_VoiceInput() {
         <div className="px-2 pt-4 pb-4">
           <p className="text-[17px] leading-relaxed font-light text-center">
             {words.map((word, i) => {
+              const isVisible = i < visibleCount;
               let color: string;
               if (i < 10) {
                 color = '#1a1a2e';
@@ -46,9 +86,14 @@ export default function SceneTwo_VoiceInput() {
                 color = 'rgba(26,26,46,0.25)';
               }
               return (
-                <span key={i} style={{ color }}>
+                <motion.span
+                  key={i}
+                  animate={{ opacity: isVisible ? 1 : 0 }}
+                  transition={{ duration: 0.25, ease: 'easeOut' }}
+                  style={{ color, display: 'inline' }}
+                >
                   {word}{' '}
-                </span>
+                </motion.span>
               );
             })}
           </p>
@@ -56,7 +101,7 @@ export default function SceneTwo_VoiceInput() {
 
         {/* Siri-style orb — grey, animated */}
         <div className="flex items-center justify-center pb-4 pt-2">
-          <div className="relative w-20 h-20">
+          <motion.div className="relative w-20 h-20" animate={orbControls}>
             {/* Outer glow ring — pulsing */}
             <div
               className="absolute inset-0 rounded-full"
@@ -96,7 +141,7 @@ export default function SceneTwo_VoiceInput() {
                 filter: 'blur(4px)',
               }}
             />
-          </div>
+          </motion.div>
         </div>
       </div>
 
@@ -113,8 +158,7 @@ export default function SceneTwo_VoiceInput() {
         <div className="border border-dashed border-zinc-300 rounded-lg p-3">
           <p className="text-zinc-500 text-[11px] font-mono leading-relaxed">
             <span className="font-bold text-zinc-600">VOICEOVER:</span> Chill Guy (casual, 
-            half-asleep): "Hey Xynth, Iran just closed the Strait of Hormuz. Search up the 
-            latest news, scan what people are saying, and tell me how I should reposition 
+            half-asleep): "Hey Xynth, Iran just closed the Strait of Hormuz. Tell me how I should reposition 
             my portfolio." Pan sizzling faintly. Talking like he's asking a roommate.
           </p>
         </div>

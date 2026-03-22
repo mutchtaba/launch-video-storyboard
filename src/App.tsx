@@ -2,7 +2,9 @@ import SceneOne_TwitterNotification from './components/scenes/SceneOne_TwitterNo
 import SceneTwo_VoiceInput from './components/scenes/SceneTwo_VoiceInput'
 import SceneThree_NewsSweep from './components/scenes/SceneThree_NewsSweep'
 import SceneTwo_SECFilings from './components/scenes/SceneTwo_SECFilings'
+import SceneTwo_SECFilingsSummary from './components/scenes/SceneTwo_SECFilingsSummary'
 import SceneThree_QuantAnalysis from './components/scenes/SceneThree_QuantAnalysis'
+import SceneFour_TheTrade from './components/scenes/SceneFour_TheTrade'
 
 function App() {
   return (
@@ -64,14 +66,56 @@ function App() {
             <section className="shrink-0 flex flex-col items-center">
               <SceneTwo_SECFilings />
             </section>
-            {/* Frame 2 (stock analysis cards) will go here */}
+            <div className="shrink-0 flex flex-col items-center justify-center self-center px-16">
+              <div className="w-32 h-px bg-zinc-300" />
+              <span className="text-zinc-400 text-[10px] font-mono mt-2 tracking-wider">
+                narrows to one name →
+              </span>
+            </div>
+            <section className="shrink-0 flex flex-col items-center">
+              <SceneTwo_SECFilingsSummary />
+            </section>
           </div>
         </div>
 
+        {/* ══ SCENE 3 — Quantitative Analysis (0:50–1:05) ══ */}
         <div>
-          <section className="shrink-0 flex flex-col items-center">
-            <SceneThree_QuantAnalysis />
-          </section>
+          <div className="mb-8">
+            <span className="text-[11px] font-mono tracking-widest uppercase text-indigo-500 bg-indigo-50 px-3 py-1.5 rounded-full">
+              Scene 3
+            </span>
+            <h1 className="text-xl font-bold text-zinc-900 mt-3 tracking-tight">
+              Quantitative Analysis
+            </h1>
+            <p className="text-sm text-zinc-400 mt-1">
+              0:50–1:05 · Xynth runs the numbers. Options flow, GEX levels, strike profiles — the full quant breakdown.
+            </p>
+          </div>
+          <div className="flex items-start gap-0">
+            <section className="shrink-0 flex flex-col items-center">
+              <SceneThree_QuantAnalysis />
+            </section>
+          </div>
+        </div>
+
+        {/* ══ SCENE 4 — The Trade (1:05–1:20) ══ */}
+        <div>
+          <div className="mb-8">
+            <span className="text-[11px] font-mono tracking-widest uppercase text-indigo-500 bg-indigo-50 px-3 py-1.5 rounded-full">
+              Scene 4
+            </span>
+            <h1 className="text-xl font-bold text-zinc-900 mt-3 tracking-tight">
+              The Trade
+            </h1>
+            <p className="text-sm text-zinc-400 mt-1">
+              1:05–1:20 · Xynth fetches the options chain, selects the strikes, and delivers the final trade.
+            </p>
+          </div>
+          <div className="flex items-start gap-0">
+            <section className="shrink-0 flex flex-col items-center">
+              <SceneFour_TheTrade />
+            </section>
+          </div>
         </div>
 
       </div>

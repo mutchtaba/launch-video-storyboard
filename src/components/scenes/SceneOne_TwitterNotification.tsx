@@ -6,7 +6,16 @@
  * Matches the Elon Musk notification screenshot aesthetic exactly.
  */
 
+import { motion, useAnimationControls } from 'framer-motion';
+
 export default function SceneOne_TwitterNotification() {
+  const controls = useAnimationControls();
+
+  const playAnimation = async () => {
+    await controls.set({ y: -120, opacity: 0, scale: 0.97 });
+    await controls.start({ y: 0, opacity: 1, scale: 1 });
+  };
+
   return (
     <div className="flex flex-col items-start gap-6">
       {/* Scene label */}
@@ -18,6 +27,17 @@ export default function SceneOne_TwitterNotification() {
           <span className="text-[10px] font-mono tracking-widest uppercase text-zinc-400">
             0:12 – 0:15
           </span>
+          <button
+            onClick={playAnimation}
+            className="rounded-full px-3 py-1 text-[10px] font-mono tracking-wide uppercase transition-colors hover:opacity-80 cursor-pointer"
+            style={{
+              background: 'rgba(0,0,0,0.85)',
+              color: '#ffffff',
+              border: '1px solid rgba(0,0,0,0.1)',
+            }}
+          >
+            ▶ Play
+          </button>
         </div>
         <h2 className="text-lg font-semibold text-zinc-800 tracking-tight">
           The Breaking News
@@ -28,7 +48,7 @@ export default function SceneOne_TwitterNotification() {
       </div>
 
       {/* ===== THE NOTIFICATION ===== */}
-      <div
+      <motion.div
         className="w-[420px] rounded-[20px] px-5 py-4"
         style={{
           background: 'rgba(30, 30, 30, 0.85)',
@@ -36,6 +56,13 @@ export default function SceneOne_TwitterNotification() {
           WebkitBackdropFilter: 'blur(40px)',
           boxShadow: '0 8px 32px rgba(0,0,0,0.2)',
           border: '1px solid rgba(255,255,255,0.06)',
+        }}
+        animate={controls}
+        transition={{
+          type: 'spring',
+          damping: 18,
+          stiffness: 120,
+          mass: 1.2,
         }}
       >
         {/* Author row: X icon + name + handle */}
@@ -53,9 +80,9 @@ export default function SceneOne_TwitterNotification() {
 
         {/* Tweet text — short, punchy */}
         <p className="text-white text-[17px] leading-snug font-light">
-          BREAKING: Iran has officially closed the Strait of Hormuz to all commercial shipping. US Navy Fifth Fleet repositioning. Oil futures +14% pre-market.
+           🚨 BREAKING: Iran has officially closed the Strait of Hormuz!
         </p>
-      </div>
+      </motion.div>
 
       {/* VFX notes */}
       <div className="w-[420px] space-y-2 mt-2">
