@@ -45,11 +45,6 @@ const expiries = ['Mar 29', 'Apr 5', 'Apr 19', 'May 17', 'Jun 21']
 const conclusionText = "Your trade is good to go. Ready to make some money?";
 const conclusionWords = conclusionText.split(' ');
 
-const analysisPillars = [
-  { label: 'News', color: '#34d399', score: 88, note: 'Buffett buying + OPEC cuts confirmed' },
-  { label: 'Fundamentals', color: '#60a5fa', score: 79, note: 'Insider buying $2.1M, forward P/E undervalued' },
-  { label: 'Technicals', color: '#a78bfa', score: 85, note: 'Score 85/100, bullish flow 72%, above key MAs' },
-]
 
 export default function SceneFour_TheTrade() {
   // Frame 1 animation state
