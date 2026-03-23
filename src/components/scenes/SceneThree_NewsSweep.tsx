@@ -30,15 +30,15 @@ const rotationSpeeds = [1600, 2000, 1800, 2200];
 
 const findingsSegments = [
   {
-    text: "Okay, this is serious. Iran shut down the Strait of Hormuz and ship traffic collapsed to zero. That's 20% of global oil supply cut off overnight.",
+    text: "Okay, this is a major escalation in the conflict. Closing the Strait means 20% of the world's oil supply disintegrated overnight.",
     color: '#1a1a2e',
   },
   {
-    text: "The market thinks this is a short term shock. But if this lasts weeks, producers like OXY haven't even started to price it in yet.",
+    text: "We should probably look towards energy and defense as possible sectors to invest in.",
     color: 'rgba(26,26,46,0.6)',
   },
   {
-    text: "Let me pull the SEC filings and see who's been quietly building positions ahead of this...",
+    text: "Let me analyze the SEC filings to get a better picture on this.",
     color: 'rgba(26,26,46,0.35)',
   },
 ];
@@ -47,7 +47,7 @@ const findingsWords = findingsSegments.flatMap(seg =>
   seg.text.split(' ').map(word => ({ word, color: seg.color }))
 );
 
-const introText = `Wow, that's huge. Let me search the latest news and figure out what it means for your portfolio`;
+const introText = `Wow, that's huge. Let me search the latest news and figure out what's going on.`;
 
 function SourceIcon({ idx }: { idx: number }) {
   if (idx === 0) return <img src={bloombergLogo} alt="Bloomberg" className="w-7 h-7 rounded-md object-cover shrink-0" />;
@@ -417,7 +417,7 @@ export default function SceneThree_NewsSweep() {
             <p className="text-zinc-500 text-[10px] font-mono leading-relaxed">
               <span className="font-bold text-zinc-600">VFX:</span> Text streams in word-by-word on top. As each source name lands 
               ("Bloomberg", "X", "Reddit", "CNN"), the matching scanner row slides in from the left with a soft fade. 
-              Spinner starts on each row the moment it appears. Status text inside each row rotates topics every ~2s.
+              Spinner starts on each row the moment it appears. 
             </p>
           </div>
           <div className="border border-dashed border-zinc-300 rounded-lg p-2.5 w-[480px]">
@@ -680,10 +680,9 @@ export default function SceneThree_NewsSweep() {
           <div className="border border-dashed border-zinc-300 rounded-lg p-2.5 w-[740px]">
             <p className="text-zinc-500 text-[10px] font-mono leading-relaxed">
               <span className="font-bold text-zinc-600">VOICEOVER:</span> Xynth: 
-              "Okay, this is serious. Iran shut down the Strait of Hormuz and ship traffic collapsed to zero. 
-              That's 20% of global oil supply cut off overnight.
-              The market thinks this is a short term shock. But if this lasts weeks, producers like OXY haven't even started to price it in yet. 
-              Let me pull the SEC filings and see who's been quietly building positions ahead of this."
+              "Okay, this is a major escalation in the conflict. Closing the Strait means 20% of the world's oil supply disintegrated overnight.
+              We should probably look towards energy and defense as possible sectors to invest in.
+              Let me analyze the SEC filings to get a better picture on this."
             </p>
           </div>
         </div>

@@ -9,10 +9,10 @@ const panelStyle = {
   border: '1px solid rgba(255,255,255,0.06)',
 } as const;
 
-const introText = "Alright now I need to find the actual trade. Let me pull up the OXY options chain and find the right strike";
+const introText = "Alright now I need to find the actual trade. Let me pull up OXY's options chain and find the right strike";
 const introWords = introText.split(' ');
 
-const transitionText = "60 call. That is where all the big money was going and it lines up with the chart. Let me put the trade together";
+const transitionText = "The 60 call for April 5th seems like the best option. The strike and expiration align with what we saw earlier from our analysis. Let me build this trade for you.";
 const transitionWords = transitionText.split(' ');
 
 type ChainRow = {
@@ -42,7 +42,7 @@ const callChain: ChainRow[] = [
 
 const expiries = ['Mar 29', 'Apr 5', 'Apr 19', 'May 17', 'Jun 21']
 
-const conclusionText = "Your trade is good to go. Ready to make some money?";
+const conclusionText = "Your trade is good to go! Ready to make some money?";
 const conclusionWords = conclusionText.split(' ');
 
 
@@ -415,9 +415,11 @@ export default function SceneFour_TheTrade() {
             </div>
             <div className="border border-dashed border-zinc-300 rounded-lg p-2.5">
               <p className="text-zinc-500 text-[10px] font-mono leading-relaxed">
-                <span className="font-bold text-zinc-600">VOICEOVER:</span> Xynth: "Now I need to find the actual trade.
-                Let me pull up the OXY options chain. The 60 call — that is where all the big money was going
-                and it lines up with the chart. Let me put the trade together."
+                <span className="font-bold text-zinc-600">VOICEOVER (before visual):</span> Xynth: "Alright now I need to find the actual trade.
+                Let me pull up OXY's options chain and find the right strike."
+                <br /><br />
+                <span className="font-bold text-zinc-600">VOICEOVER (after visual):</span> Xynth: "The 60 call for April 5th seems like the best option.
+                The strike and expiration align with what we saw earlier from our analysis. Let me build this trade for you."
               </p>
             </div>
           </div>
@@ -574,7 +576,7 @@ export default function SceneFour_TheTrade() {
             </div>
             <div className="border border-dashed border-zinc-300 rounded-lg p-2.5">
               <p className="text-zinc-500 text-[10px] font-mono leading-relaxed">
-                <span className="font-bold text-zinc-600">VOICEOVER:</span> Xynth: "Your trade is good to go.
+                <span className="font-bold text-zinc-600">VOICEOVER:</span> Xynth: "Your trade is good to go!
                 Ready to make some money?"
               </p>
             </div>

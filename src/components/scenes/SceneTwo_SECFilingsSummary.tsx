@@ -24,15 +24,15 @@ const insiderDeals = [
 
 const narrativeSegments = [
   {
-    text: "OXY keeps showing up. Warren Buffett's fund has been quietly buying millions of shares, and the company's own CEO is putting her own money in. When insiders buy like this it usually means they think the stock is undervalued.",
+    text: "Looks like oil producer OXY is the strongest candidate here.",
     color: '#1a1a2e',
   },
   {
-    text: "The valuation backs it up. You're only paying about 10x what the company is expected to earn next year, and for every dollar the stock costs you're getting 8 cents in free cash flow. That's really cheap for an oil company that's growing production while everyone else is pulling back.",
+    text: "Insiders are buying heavily and the valuation is cheap for what you're getting.",
     color: 'rgba(26,26,46,0.6)',
   },
   {
-    text: "With the Strait of Hormuz shut down and oil supply tightening, this is the name I'd put real money behind.",
+    text: "Let me run the technicals and options data next.",
     color: 'rgba(26,26,46,0.35)',
   },
 ];
@@ -362,10 +362,9 @@ export default function SceneTwo_SECFilingsSummary() {
         </div>
         <div className="border border-dashed border-zinc-300 rounded-lg p-2.5">
           <p className="text-zinc-500 text-[10px] font-mono leading-relaxed">
-            <span className="font-bold text-zinc-600">VOICEOVER:</span> Xynth: "OXY keeps showing up.
-            Buffett's fund has been quietly buying millions of shares, and the CEO is putting her own
-            money in. You're only paying about 10x next year's earnings with 8% free cash flow yield.
-            With Hormuz shut and supply tightening, this is the one I'd put real money behind."
+            <span className="font-bold text-zinc-600">VOICEOVER:</span> Xynth: "Looks like oil producer OXY is the strongest candidate here.
+            Insiders are buying heavily and the valuation is cheap for what you're getting.
+            Let me run the technicals and options data next."
           </p>
         </div>
       </div>

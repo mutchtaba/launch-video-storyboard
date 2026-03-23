@@ -2,15 +2,11 @@ import { useState, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import gsap from 'gsap';
 
-const introText = `Now let me run the technicals on OXY. I want to see the price action, where the options flow is clustering, and how market makers are positioned. The filings told us the story, this tells us when to move`;
+const introText = `Analyzing the price action and options flow for the past 24 hours.`;
 
-const f1TransitionText = "Technicals look strong. Price bounced clean off support, pushed through the liquidity zone, and is sitting just under resistance. Let me check the options flow next and see where the smart money is positioning";
-const f1TransitionWords = f1TransitionText.split(' ');
 
-const f2TransitionText = "Okay so the call side is clearly winning here. Most of the big sweeps are hitting the 65 strike over and over. The biggest one is 3.1 million dollars which is way too large to be a regular person trading. This looks like institutions loading up. Let me pull everything together into the final summary";
-const f2TransitionWords = f2TransitionText.split(' ');
 
-const f3ConclusionText = "Alright so the technicals are clean and the flow is completely one sided. The chart held support, pushed through the consolidation zone, and now institutions are aggressively buying calls at the same strike. Dark pool volume is up 40 percent this week which means someone has been quietly loading up shares off exchange before any of this flow went public. That does not happen by accident. Everything is lining up. I think we should be in this.";
+const f3ConclusionText = "Looks like everything's lining up. Chart broke resistance with volume, calls are clustering at the 65 strike, and market makers are net long gamma. I think we should be in this.";
 const f3ConclusionWords = f3ConclusionText.split(' ');
 
 type Candle = {
@@ -256,8 +252,6 @@ export default function SceneThree_QuantAnalysis() {
   const [f1PillRSI, setF1PillRSI] = useState(68.7);
   const [f1IndicatorsVisible, setF1IndicatorsVisible] = useState([true, true, true, true]);
   const [f1ChartPanelVisible, setF1ChartPanelVisible] = useState(true);
-  const [f1TransitionVisible, setF1TransitionVisible] = useState(true);
-  const [f1StreamedWords, setF1StreamedWords] = useState(f1TransitionWords.length);
 
   // Frame 2 animation state
   const [f2Playing, setF2Playing] = useState(false);
@@ -270,8 +264,6 @@ export default function SceneThree_QuantAnalysis() {
   const [f2CardFlash, setF2CardFlash] = useState<('green' | 'red' | null)[]>([null, null, null]);
   const [f2CardsVisible, setF2CardsVisible] = useState(true);
   const [f2HighlightedRows, setF2HighlightedRows] = useState<number[]>([]);
-  const [f2TransitionVisible, setF2TransitionVisible] = useState(true);
-  const [f2StreamedWords, setF2StreamedWords] = useState(f2TransitionWords.length);
 
   // Frame 3 animation state
   const [f3Playing, setF3Playing] = useState(false);
@@ -308,8 +300,6 @@ export default function SceneThree_QuantAnalysis() {
     setF1PillLiqZone(0);
     setF1PillRSI(0);
     setF1IndicatorsVisible([false, false, false, false]);
-    setF1TransitionVisible(false);
-    setF1StreamedWords(0);
 
     await new Promise(r => setTimeout(r, 200));
 
@@ -378,14 +368,6 @@ export default function SceneThree_QuantAnalysis() {
       await new Promise(r => setTimeout(r, 300));
     }
 
-    // ── Phase 5: Transition text streams in ──
-    await new Promise(r => setTimeout(r, 400));
-    setF1TransitionVisible(true);
-    for (let i = 1; i <= f1TransitionWords.length; i++) {
-      await new Promise(r => setTimeout(r, 50));
-      setF1StreamedWords(i);
-    }
-
     setF1Playing(false);
   }, [f1Playing, openPrice]);
 
@@ -403,8 +385,6 @@ export default function SceneThree_QuantAnalysis() {
     setF2CardFlash([null, null, null]);
     setF2CardsVisible(false);
     setF2HighlightedRows([]);
-    setF2TransitionVisible(false);
-    setF2StreamedWords(0);
 
     await new Promise(r => setTimeout(r, 300));
 
@@ -488,13 +468,6 @@ export default function SceneThree_QuantAnalysis() {
       await new Promise(r => setTimeout(r, 120));
     }
 
-    // ── Phase 4: Transition text streams ──
-    await new Promise(r => setTimeout(r, 400));
-    setF2TransitionVisible(true);
-    for (let i = 1; i <= f2TransitionWords.length; i++) {
-      await new Promise(r => setTimeout(r, 50));
-      setF2StreamedWords(i);
-    }
 
     setF2Playing(false);
   }, [f2Playing]);
@@ -721,25 +694,6 @@ export default function SceneThree_QuantAnalysis() {
             </div>
           </div>
 
-          {/* Transition text — streams after TA completes */}
-          <motion.div
-            animate={{ opacity: f1TransitionVisible ? 1 : 0, y: f1TransitionVisible ? 0 : 10 }}
-            transition={{ duration: 0.4, ease: 'easeOut' }}
-            className="w-[780px] mt-1"
-          >
-            <p className="text-[15px] leading-relaxed font-light">
-              {f1TransitionWords.map((word, i) => (
-                <motion.span
-                  key={i}
-                  animate={{ opacity: i < f1StreamedWords ? 1 : 0 }}
-                  transition={{ duration: 0.15, ease: 'easeOut' }}
-                  style={{ color: i < 6 ? '#1a1a2e' : 'rgba(26,26,46,0.5)', display: 'inline' }}
-                >
-                  {word}{' '}
-                </motion.span>
-              ))}
-            </p>
-          </motion.div>
 
       <div className="space-y-2 mt-2" style={{ width: 760 }}>
         <div className="border border-dashed border-zinc-300 rounded-lg p-2.5">
@@ -750,8 +704,7 @@ export default function SceneThree_QuantAnalysis() {
         </div>
         <div className="border border-dashed border-zinc-300 rounded-lg p-2.5">
           <p className="text-zinc-500 text-[10px] font-mono leading-relaxed">
-            <span className="font-bold text-zinc-600">VOICEOVER:</span> Xynth: "Technicals are strong. Price above both moving averages,
-            RSI at 68 with solid momentum. Let me check the options flow."
+            <span className="font-bold text-zinc-600">VOICEOVER:</span> Xynth: "Analyzing the price action and options flow for the past 24 hours."
           </p>
         </div>
           </div>
@@ -867,38 +820,12 @@ export default function SceneThree_QuantAnalysis() {
             </div>
           </div>
 
-          {/* Transition text — streams after flow scan completes */}
-          <motion.div
-            animate={{ opacity: f2TransitionVisible ? 1 : 0, y: f2TransitionVisible ? 0 : 10 }}
-            transition={{ duration: 0.4, ease: 'easeOut' }}
-            className="w-[660px] mt-1"
-          >
-            <p className="text-[15px] leading-relaxed font-light">
-              {f2TransitionWords.map((word, i) => (
-                <motion.span
-                  key={i}
-                  animate={{ opacity: i < f2StreamedWords ? 1 : 0 }}
-                  transition={{ duration: 0.15, ease: 'easeOut' }}
-                  style={{ color: i < 8 ? '#1a1a2e' : 'rgba(26,26,46,0.5)', display: 'inline' }}
-                >
-                  {word}{' '}
-                </motion.span>
-              ))}
-            </p>
-          </motion.div>
-
           <div className="space-y-2 mt-2" style={{ width: 660 }}>
             <div className="border border-dashed border-zinc-300 rounded-lg p-2.5">
               <p className="text-zinc-500 text-[10px] font-mono leading-relaxed">
                 <span className="font-bold text-zinc-600">VFX:</span> Tape rolls fast with dummy rows (slot-machine style),
                 header metrics count up live, tape decelerates and locks on real rows, bullish rows flash green,
                 summary cards cascade in from right.
-              </p>
-            </div>
-            <div className="border border-dashed border-zinc-300 rounded-lg p-2.5">
-              <p className="text-zinc-500 text-[10px] font-mono leading-relaxed">
-                <span className="font-bold text-zinc-600">VOICEOVER:</span> Xynth: "Ask-side calls leading the tape, 72% on the ask.
-                $3.1M lead sweep at 65 strike. This is institutional sizing, not retail."
               </p>
             </div>
           </div>
@@ -1104,7 +1031,7 @@ export default function SceneThree_QuantAnalysis() {
             </div>
             <div className="border border-dashed border-zinc-300 rounded-lg p-2.5">
               <p className="text-zinc-500 text-[10px] font-mono leading-relaxed">
-                <span className="font-bold text-zinc-600">VOICEOVER:</span> Xynth: "Alright so the technicals are clean and the flow is completely one sided. The chart held support, pushed through the consolidation zone, and now institutions are aggressively buying calls at the same strike. Dark pool volume is up 40 percent this week which means someone has been quietly loading up shares off exchange before any of this flow went public. That does not happen by accident. Everything is lining up. I think we should be in this."
+                <span className="font-bold text-zinc-600">VOICEOVER:</span> Xynth: "Looks like everything's lining up. Chart broke resistance with volume, calls are clustering at the 65 strike, and market makers are net long gamma. I think we should be in this."
               </p>
             </div>
           </div>

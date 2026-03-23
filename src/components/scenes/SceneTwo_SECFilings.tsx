@@ -13,7 +13,7 @@ interface DocumentScanPanelHandle {
   playInner: () => Promise<void>;
 }
 
-const introText = `Alright pulling SEC filings now. I want to see who's been quietly building positions before this blew up. Insider buys, institutional accumulation, production capacity, new contracts`;
+const introText = `Scanning the SEC filings now.`;
 
 export default function SceneTwo_SECFilings() {
   const words = introText.split(' ');
@@ -325,9 +325,7 @@ export default function SceneTwo_SECFilings() {
         <div className="border border-dashed border-zinc-300 rounded-lg p-2.5">
           <p className="text-zinc-500 text-[10px] font-mono leading-relaxed">
             <span className="font-bold text-zinc-600">VOICEOVER:</span> Xynth:
-            "Scanning SEC filings — 10-K production data, Form 4 insider transactions,
-            13-F institutional holdings, and 8-K material events. Cross-referencing to
-            see who's been positioning ahead of this."
+            "Scanning the SEC filings now."
           </p>
         </div>
       </div>
